@@ -1,12 +1,20 @@
 const { startServer } = require('server');
 const { createApp } = require('./src/app.js');
+const { Games } = require('./src/models/games.js');
 const session = require('myserver-session');
 
-const app = createApp({
-  path: './public',
-  session
-});
+const main = () => {
 
-const PORT = 3000;
+  const games = new Games();
 
-startServer(PORT, app);
+  const app = createApp({
+    path: './public',
+    session,
+    games
+  });
+
+  const PORT = 3000;
+  startServer(PORT, app);
+};
+
+main();

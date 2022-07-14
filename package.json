@@ -26,5 +26,8 @@
     "mime-type": "^4.0.0",
     "myserver-session": "github:nitinsharmacs/myserver-session",
     "server": "github:rapheljr/my-server"
+  },
+  "devDependencies": {
+    "supertest": "^6.2.4"
   }
 }
