@@ -4,7 +4,8 @@
   "description": "Rock Paper Scissors multi-player game",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha test",
+    "start": "node ."
   },
   "repository": {
     "type": "git",
@@ -20,5 +21,10 @@
   "bugs": {
     "url": "https://github.com/nitinsharmacs/rps/issues"
   },
-  "homepage": "https://github.com/nitinsharmacs/rps#readme"
+  "homepage": "https://github.com/nitinsharmacs/rps#readme",
+  "dependencies": {
+    "mime-type": "^4.0.0",
+    "myserver-session": "github:nitinsharmacs/myserver-session",
+    "server": "github:rapheljr/my-server"
+  }
 }
