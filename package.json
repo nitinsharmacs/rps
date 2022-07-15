@@ -23,9 +23,8 @@
   },
   "homepage": "https://github.com/nitinsharmacs/rps#readme",
   "dependencies": {
-    "mime-type": "^4.0.0",
-    "myserver-session": "github:nitinsharmacs/myserver-session",
-    "server": "github:rapheljr/my-server"
+    "express": "^4.18.1",
+    "myserver-session": "github:nitinsharmacs/myserver-session"
   },
   "devDependencies": {
     "supertest": "^6.2.4"

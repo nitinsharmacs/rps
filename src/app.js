@@ -1,15 +1,18 @@
-const { createRouter } = require('server');
+const express = require('express');
 const { createGame } = require('./handlers/game.js');
-const { serveFileContents } = require('./serveFile.js');
 
 const createApp = ({ path, session, games }) => {
-  const routeHandlers = [
-    session(),
-    createGame(games),
-    serveFileContents(path)
-  ];
+  const app = express();
 
-  return createRouter(...routeHandlers);
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+
+  app.use(session());
+  app.use(express.static('public'));
+
+  app.post('/create-game', createGame(games));
+
+  return app;
 };
 
 module.exports = { createApp };

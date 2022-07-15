@@ -1,10 +1,6 @@
 const { Game } = require("../models/game.js");
 
-const createGame = (games) => (req, res, next) => {
-  if (!req.matches('POST', '/create-game')) {
-    return next();
-  }
-
+const createGame = (games) => (req, res) => {
   const { playerName } = req.body;
 
   const game = games.newGame(playerName);

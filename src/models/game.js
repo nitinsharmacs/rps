@@ -1,8 +1,3 @@
-const getMove = (player) => {
-  const [move] = player.moves.slice(-1);
-  return move;
-};
-
 const stringifyMoves = (move1, move2) => move1 + ',' + move2;
 
 class Game {
@@ -41,8 +36,8 @@ class Game {
       'paper,scissor': player2
     };
 
-    const move1 = getMove(player1);
-    const move2 = getMove(player2);
+    const move1 = player1.getMove();
+    const move2 = player2.getMove();
 
     return winnerMapper[stringifyMoves(move1, move2)];
   }
