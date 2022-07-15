@@ -7,7 +7,7 @@ class Games {
   }
 
   newGame(host) {
-    const gameId = this.#games.length;
+    const gameId = this.#games.length + 1;
 
     const game = new Game(gameId, host);
     this.#games.push(game);

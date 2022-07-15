@@ -16,8 +16,8 @@ class Game {
     return true;
   }
 
-  playMove(playerId, move) {
-    const player = this.players.find(({ id }) => id === playerId);
+  playMove(playerName, move) {
+    const player = this.players.find(({ name }) => name === playerName);
 
     if (player) {
       player.play(move);
@@ -52,7 +52,7 @@ class Game {
     return true;
   }
 
-  stat() {
+  stats() {
     return {
       started: this.players.length === this.limit,
       winner: this.winner(),
