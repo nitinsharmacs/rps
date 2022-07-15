@@ -6,13 +6,17 @@ class Games {
     this.#games = [];
   }
 
-  newGame(playerName) {
+  newGame(host) {
     const gameId = this.#games.length;
 
-    const game = new Game(gameId, playerName);
+    const game = new Game(gameId, host);
     this.#games.push(game);
 
     return game;
+  }
+
+  getGame(gameId) {
+    return this.#games.find(({ id }) => id === gameId);
   }
 }
 

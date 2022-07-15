@@ -7,10 +7,14 @@ const createGame = (games) => (req, res, next) => {
 
   const { playerName } = req.body;
 
-  games.newGame(playerName);
-  res.setHeader('location', '/lobby');
-  res.statusCode = 302;
-  res.end('ok');
+  const game = games.newGame(playerName);
+  req.session.gameId = game.id;
+
+  req.session.saveSession(() => {
+    res.setHeader('location', '/lobby');
+    res.statusCode = 302;
+    res.end('ok');
+  });
 };
 
 module.exports = { createGame };
