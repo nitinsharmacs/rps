@@ -51,13 +51,23 @@ class Game {
     return move1 === move2;
   }
 
+  hasGameStarted() {
+    return this.players.length === this.limit;
+  }
   stats() {
+    if (this.hasGameStarted()) {
+      return {
+        started: true,
+        winner: this.winner(),
+        draw: this.isDraw(),
+        players: this.players
+      }
+    };
+
     return {
-      started: this.players.length === this.limit,
-      winner: this.winner(),
-      draw: this.isDraw(),
+      started: false,
       players: this.players
-    }
+    };
   }
 
   findPlayer(playerName) {

@@ -13,14 +13,14 @@ const createGame = (games) => (req, res) => {
   req.session.saveSession(() => {
     res.setHeader('location', '/lobby');
     res.statusCode = 302;
-    res.end('ok');
+    res.end();
   });
 };
 
 const joinGame = (games) => (req, res) => {
   const { gameId, playerName } = req.body;
 
-  const game = games.getGame(gameId);
+  const game = games.getGame(+gameId);
 
   if (!game) {
     res.status(404).end('Game not found');
@@ -30,7 +30,7 @@ const joinGame = (games) => (req, res) => {
   const player = new Player(playerName);
   game.join(player);
 
-  req.session.gameId = gameId;
+  req.session.gameId = game.id;
   req.session.playerName = playerName;
 
   req.session.saveSession(() => {
@@ -42,6 +42,7 @@ const lobby = (games) => (req, res) => {
   const { gameId, playerName } = req.session;
 
   const game = games.getGame(gameId);
+
   if (!game) {
     res.status(400).end('No game found!');
     return;
@@ -54,8 +55,8 @@ const lobby = (games) => (req, res) => {
 };
 
 const playMove = (games) => (req, res) => {
-  const { gameId } = req.session;
-  const { playerName, move } = req.body;
+  const { gameId, playerName } = req.session;
+  const { move } = req.body;
 
   const game = games.getGame(gameId);
 
@@ -66,9 +67,25 @@ const playMove = (games) => (req, res) => {
   res.json(gameStats);
 };
 
+const gameStats = (games) => (req, res) => {
+  const { gameId } = req.session;
+
+  const game = games.getGame(gameId);
+
+  if (!game) {
+    res.status(400).end('No game found!');
+    return;
+  }
+
+  const gameStats = game.stats();
+
+  res.json(gameStats);
+};
+
 module.exports = {
   createGame,
   joinGame,
   lobby,
-  playMove
+  playMove,
+  gameStats
 };
