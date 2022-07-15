@@ -1,4 +1,5 @@
 const { Player } = require('../models/player.js');
+const { lobbyPage } = require('../views/lobby.js');
 
 const createGame = (games) => (req, res) => {
   const { playerName } = req.body;
@@ -7,6 +8,7 @@ const createGame = (games) => (req, res) => {
 
   const game = games.newGame(host);
   req.session.gameId = game.id;
+  req.session.playerName = playerName;
 
   req.session.saveSession(() => {
     res.setHeader('location', '/lobby');
@@ -15,9 +17,40 @@ const createGame = (games) => (req, res) => {
   });
 };
 
-const lobby = (req, res) => {
+const joinGame = (games) => (req, res) => {
+  const { gameId, playerName } = req.body;
+
+  const game = games.getGame(gameId);
+
+  if (!game) {
+    res.status(404).end('Game not found');
+    return;
+  }
+
+  const player = new Player(playerName);
+  game.join(player);
+
+  req.session.gameId = gameId;
+  req.session.playerName = playerName;
+
+  req.session.saveSession(() => {
+    res.redirect('/lobby');
+  });
+};
+
+const lobby = (games) => (req, res) => {
+  const { gameId, playerName } = req.session;
+
+  const game = games.getGame(gameId);
+  if (!game) {
+    res.status(400).end('No game found!');
+    return;
+  }
+
+  const player = game.findPlayer(playerName);
+
   res.type('html');
-  res.end();
+  res.end(lobbyPage(player, gameId));
 };
 
 const playMove = (games) => (req, res) => {
@@ -35,6 +68,7 @@ const playMove = (games) => (req, res) => {
 
 module.exports = {
   createGame,
+  joinGame,
   lobby,
   playMove
 };

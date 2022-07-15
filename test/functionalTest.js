@@ -5,6 +5,8 @@ const { createApp } = require('../src/app.js');
 const { Games } = require('../src/models/games.js');
 const { Player } = require('../src/models/player.js');
 
+const { lobbyPage } = require('../src/views/lobby.js');
+
 let gameId;
 
 const session = () => (req, res, next) => {
@@ -41,27 +43,6 @@ describe('POST /create-game', () => {
         gameId = null;
         done();
       });
-  });
-});
-
-describe('GET /lobby', () => {
-  const session = () => (req, res, next) => {
-    req.session = {};
-    req.session.gameId = 1;
-    next();
-  };
-
-  const app = createApp({
-    path: '/public',
-    session,
-    games: new Games()
-  });
-
-  it('should respond with lobby html page', (done) => {
-    request(app)
-      .get('/lobby')
-      .expect('content-type', 'text/html; charset=utf-8')
-      .expect(200, done)
   });
 });
 
@@ -106,5 +87,66 @@ describe('POST /play-move', () => {
 
         done();
       });
+  });
+});
+
+describe('GET /lobby', () => {
+  const session = () => (req, res, next) => {
+    req.session = {};
+    req.session.gameId = 1;
+    req.session.playerName = 'abin';
+    next();
+  };
+
+  const games = new Games();
+  games.newGame(new Player('abin'));
+
+  const game = games.getGame(1);
+
+  game.join(new Player('nitin'));
+
+  const app = createApp({
+    path: '/public',
+    session,
+    games
+  });
+
+  it('should respond with lobby page', (done) => {
+    request(app)
+      .get('/lobby')
+      .expect('content-type', 'text/html; charset=utf-8')
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+
+        const expectedLobbyPage = lobbyPage({ name: 'abin' }, 1);
+        assert.strictEqual(res.text, expectedLobbyPage);
+        done();
+      });
+  });
+});
+
+describe('POST /join', () => {
+
+  const games = new Games();
+  games.newGame(new Player('abin'));
+
+  const game = games.getGame(1);
+
+  game.join(new Player('nitin'));
+
+  const app = createApp({
+    path: '/public',
+    session,
+    games
+  });
+
+  it('should create game session and redirect to lobby', (done) => {
+    request(app)
+      .post('/join')
+      .send({ gameId: 1, playerName: 'nitin' })
+      .expect('set-cookie', 'sessionId=23232')
+      .expect('location', '/lobby')
+      .expect(302, done);
   });
 });

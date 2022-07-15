@@ -59,6 +59,10 @@ class Game {
       players: this.players
     }
   }
+
+  findPlayer(playerName) {
+    return this.players.find(({ name }) => name === playerName);
+  }
 }
 
 module.exports = { Game };

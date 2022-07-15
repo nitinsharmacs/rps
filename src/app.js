@@ -1,5 +1,5 @@
 const express = require('express');
-const { createGame, lobby, playMove } = require('./handlers/game.js');
+const { createGame, lobby, playMove, joinGame } = require('./handlers/game.js');
 
 // middlewares
 const { restrict } = require('./middlewares/restrict.js');
@@ -14,16 +14,13 @@ const createApp = ({ path, session, games }) => {
   app.use(express.static('public'));
 
   app.post('/create-game', createGame(games));
+  app.post('/join', joinGame(games));
 
   app.use(restrict);
 
-  app.get('/lobby', lobby);
+  app.get('/lobby', lobby(games));
 
   app.post('/play-move', playMove(games));
-
-  app.use((err, req, res) => {
-    console.log(err);
-  });
 
   return app;
 };
