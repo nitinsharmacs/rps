@@ -43,20 +43,20 @@ class Game {
   }
 
   isDraw() {
-    const winner = this.winner();
+    const [player1, player2] = this.players;
 
-    if (winner) {
-      return false;
-    }
+    const move1 = player1.getMove();
+    const move2 = player2.getMove();
 
-    return true;
+    return move1 === move2;
   }
 
   stats() {
     return {
       started: this.players.length === this.limit,
       winner: this.winner(),
-      draw: this.isDraw()
+      draw: this.isDraw(),
+      players: this.players
     }
   }
 }

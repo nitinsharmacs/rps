@@ -48,8 +48,7 @@ describe('GET /lobby', () => {
   const session = () => (req, res, next) => {
     req.session = {};
     req.session.gameId = 1;
-    req.
-      next();
+    next();
   };
 
   const app = createApp({
@@ -92,6 +91,20 @@ describe('POST /play-move', () => {
       .post('/play-move')
       .send({ playerName: 'abin', move: 'rock' })
       .expect('content-type', 'application/json; charset=utf-8')
-      .expect(200, done)
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+
+        assert.deepStrictEqual(res.body, {
+          draw: false,
+          started: true,
+          players: [
+            { name: 'abin', moves: ['rock'] },
+            { name: 'nitin', moves: [] }
+          ]
+        });
+
+        done();
+      });
   });
 });
